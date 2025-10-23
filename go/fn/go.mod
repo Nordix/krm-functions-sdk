@@ -1,6 +1,6 @@
 module github.com/kptdev/krm-functions-sdk/go/fn
 
-go 1.24.3
+go 1.25.3
 
 require (
 	github.com/go-errors/errors v1.5.1
