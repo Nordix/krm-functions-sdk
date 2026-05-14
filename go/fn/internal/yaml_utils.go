@@ -22,7 +22,7 @@ import (
 )
 
 func asString(node *yaml.Node) (string, bool) {
-	if node.Kind == yaml.ScalarNode && (node.Tag == "!!str" || node.Tag == "") {
+	if node.Kind == yaml.ScalarNode && (node.Tag == tagString || node.Tag == "") {
 		return node.Value, true
 	}
 	return "", false

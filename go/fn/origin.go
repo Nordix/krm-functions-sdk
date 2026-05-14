@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ func (r *ResourceIdentifier) String() string {
 }
 
 // hasUpstreamIdentifier determines whether the args are touching the kpt only annotation "internal.kpt.dev/upstream-identifier"
-func (o *SubObject) hasUpstreamIdentifier(val interface{}, fields ...string) bool {
+func (o *SubObject) hasUpstreamIdentifier(val any, fields ...string) bool {
 	kind := reflect.ValueOf(val).Kind()
-	if kind == reflect.Ptr {
+	if kind == reflect.Pointer {
 		kind = reflect.TypeOf(val).Elem().Kind()
 	}
 	switch kind {
@@ -132,8 +132,8 @@ func (o *KubeObject) HasUpstreamOrigin() bool {
 
 // ParseGroupVersion parses a "apiVersion" to get the "group" and "version" values.
 func ParseGroupVersion(apiVersion string) (group, version string) {
-	if i := strings.Index(apiVersion, "/"); i > -1 {
-		return apiVersion[:i], apiVersion[i+1:]
+	if before, after, ok := strings.Cut(apiVersion, "/"); ok {
+		return before, after
 	}
 	return "", apiVersion
 }

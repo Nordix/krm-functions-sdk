@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ import (
 	"os"
 )
 
-func Log(in ...interface{}) {
+func Log(in ...any) {
 	fmt.Fprintln(os.Stderr, in...)
 }
 
-func Logf(format string, in ...interface{}) {
+func Logf(format string, in ...any) {
 	fmt.Fprintf(os.Stderr, format, in...)
 }

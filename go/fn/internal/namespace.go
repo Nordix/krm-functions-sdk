@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import (
 )
 
 // PrecomputedIsNamespaceScoped copies the sigs.k8s.io/kustomize/kyaml/openapi precomputedIsNamespaceScoped
+//
+//nolint:goconst // This is a static lookup table; extracting constants would reduce readability.
 var PrecomputedIsNamespaceScoped = map[yaml.TypeMeta]bool{
 	{APIVersion: "admissionregistration.k8s.io/v1", Kind: "MutatingWebhookConfiguration"}:        false,
 	{APIVersion: "admissionregistration.k8s.io/v1", Kind: "ValidatingWebhookConfiguration"}:      false,

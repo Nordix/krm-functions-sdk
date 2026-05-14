@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ func (i Result) String() string {
 	if i.Severity == "" {
 		severity = Info
 	}
-	list := []interface{}{severity}
+	list := []any{severity}
 	if len(idStringList) > 0 {
 		formatString += " %s"
 		list = append(list, strings.Join(idStringList, "/"))
@@ -122,10 +122,10 @@ type Field struct {
 	Path string `yaml:"path,omitempty" json:"path,omitempty"`
 
 	// CurrentValue is the current field value
-	CurrentValue interface{} `yaml:"currentValue,omitempty" json:"currentValue,omitempty"`
+	CurrentValue any `yaml:"currentValue,omitempty" json:"currentValue,omitempty"`
 
 	// ProposedValue is the proposed value of the field to fix an issue.
-	ProposedValue interface{} `yaml:"proposedValue,omitempty" json:"proposedValue,omitempty"`
+	ProposedValue any `yaml:"proposedValue,omitempty" json:"proposedValue,omitempty"`
 }
 
 type Results []*Result

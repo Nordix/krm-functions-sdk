@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ func TestMapVariantToTypedObject(t *testing.T) {
 	testcases := []struct {
 		name     string
 		src      string
-		dst      interface{}
-		expected interface{}
+		dst      any
+		expected any
 	}{
 		{
 			name: "k8s built-in types",
@@ -116,7 +116,7 @@ desiredReplicas: 1
 func TestNewFromTypedObject(t *testing.T) {
 	testcases := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected string
 	}{
 		{
@@ -264,7 +264,7 @@ func TestBadNewFromTypedObject(t *testing.T) {
 
 type Foo struct {
 	metav1.TypeMeta   `json:",inline" yaml:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata" yaml:"metadata,omitempty"`
 	DesiredReplicas   int `json:"desiredReplicas,omitempty" yaml:"desiredReplicas,omitempty"`
 }
 
