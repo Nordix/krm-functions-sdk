@@ -20,8 +20,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	kptfileapi "github.com/kptdev/krm-functions-sdk/go/fn/kptfileapi"
 	"github.com/kptdev/krm-functions-sdk/go/fn"
+	kptfileapi "github.com/kptdev/krm-functions-sdk/go/fn/kptfileapi"
 )
 
 const (
@@ -66,7 +66,7 @@ func TestIsTypeAndStatus(t *testing.T) {
 }
 
 func TestIsConditionType(t *testing.T) {
-	ko, err := fn.NewFromTypedObject(map[string]interface{}{"conditionType": ConditionTypeReady})
+	ko, err := fn.NewFromTypedObject(map[string]any{"conditionType": ConditionTypeReady})
 	require.NoError(t, err)
 
 	assert.True(t, IsConditionType(ConditionTypeReady)(&ko.SubObject))

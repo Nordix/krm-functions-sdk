@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 	"testing"
 
@@ -150,10 +151,8 @@ func fakeExecCmd(t *testing.T, expectedArgsAndReturns []string, envs []string, n
 	c = append(c, name)
 	c = append(c, args...)
 	command := strings.Join(c, " ")
-	for _, expected := range expectedArgsAndReturns {
-		if expected == command {
-			return
-		}
+	if slices.Contains(expectedArgsAndReturns, command) {
+		return
 	}
 	t.Fatalf("unexpected command run %v", command)
 }

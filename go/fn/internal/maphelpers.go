@@ -1,4 +1,4 @@
-// Copyright 2022,2025 The kpt Authors
+// Copyright 2022,2025-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ func (o *MapVariant) GetRNode(fields ...string) (*yaml.RNode, bool, error) {
 func (o *MapVariant) GetNestedValue(fields ...string) (variant, bool, error) {
 	current := o
 	n := len(fields)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		entry, found := current.getVariant(fields[i])
 		if !found {
 			return nil, found, nil
@@ -55,7 +55,7 @@ func (o *MapVariant) SetNestedValue(val variant, fields ...string) error {
 	current := o
 	n := len(fields)
 	var err error
-	for i := 0; i < n; i++ {
+	for i := range n {
 		if i == n-1 {
 			current.setField(fields[i], val)
 		} else {
@@ -199,7 +199,7 @@ func (o *MapVariant) SetNestedSlice(s *SliceVariant, fields ...string) error {
 func (o *MapVariant) RemoveNestedField(fields ...string) (bool, error) {
 	current := o
 	n := len(fields)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		entry, found := current.getVariant(fields[i])
 		if !found {
 			return false, nil

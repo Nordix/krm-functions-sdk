@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ func buildSequenceNode(nodes ...*yaml.Node) *yaml.Node {
 func buildStringNode(s string) *yaml.Node {
 	return &yaml.Node{
 		Kind:  yaml.ScalarNode,
-		Tag:   "!!str",
+		Tag:   tagString,
 		Value: s,
 	}
 }
@@ -117,7 +117,7 @@ func ExtractObjects(nodes ...*yaml.Node) ([]*MapVariant, error) {
 	return objects, nil
 }
 
-func TypedObjectToMapVariant(v interface{}) (*MapVariant, error) {
+func TypedObjectToMapVariant(v any) (*MapVariant, error) {
 	// The built-in types only have json tags. We can't simply do ynode.Encode(v),
 	// since it use the lowercased field name by default if no yaml tag is specified.
 	// This affects both k8s built-in types (e.g. appsv1.Deployment) and any types
@@ -129,7 +129,7 @@ func TypedObjectToMapVariant(v interface{}) (*MapVariant, error) {
 		if err != nil {
 			return nil, err
 		}
-		var m map[string]interface{}
+		var m map[string]any
 		if err = json.Unmarshal(j, &m); err != nil {
 			return nil, err
 		}
@@ -150,7 +150,7 @@ func TypedObjectToMapVariant(v interface{}) (*MapVariant, error) {
 	return mv, err
 }
 
-func TypedObjectToSliceVariant(v interface{}) (*SliceVariant, error) {
+func TypedObjectToSliceVariant(v any) (*SliceVariant, error) {
 	// The built-in types only have json tags. We can't simply do ynode.Encode(v),
 	// since it use the lowercased field name by default if no yaml tag is specified.
 	// This affects both k8s built-in types (e.g. appsv1.Deployment) and any types
@@ -162,7 +162,7 @@ func TypedObjectToSliceVariant(v interface{}) (*SliceVariant, error) {
 		if err != nil {
 			return nil, err
 		}
-		var l []interface{}
+		var l []any
 		if err = json.Unmarshal(j, &l); err != nil {
 			return nil, err
 		}
@@ -180,8 +180,8 @@ func TypedObjectToSliceVariant(v interface{}) (*SliceVariant, error) {
 	return &SliceVariant{node: node}, nil
 }
 
-func MapVariantToTypedObject(mv *MapVariant, ptr interface{}) error {
-	if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Ptr {
+func MapVariantToTypedObject(mv *MapVariant, ptr any) error {
+	if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Pointer {
 		return fmt.Errorf("ptr must be a pointer to an object")
 	}
 

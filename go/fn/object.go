@@ -138,8 +138,8 @@ func (o *SubObject) NestedSubObject(fields ...string) (SubObject, bool, error) {
 }
 
 // NestedResource returns a map[string]string value of a nested field, false if not found and an error if not a map[string]string type.
-func (o *SubObject) NestedResource(ptr interface{}, fields ...string) (bool, error) {
-	if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Ptr {
+func (o *SubObject) NestedResource(ptr any, fields ...string) (bool, error) {
+	if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Pointer {
 		return false, fmt.Errorf("ptr must be a pointer to an object")
 	}
 	k := reflect.TypeOf(ptr).Elem().Kind()
@@ -202,7 +202,7 @@ func (o *SubObject) RemoveNestedField(fields ...string) (bool, error) {
 }
 
 // onLockedFields locks the SubObject fields which are expected for kpt internal use only.
-func (o *SubObject) onLockedFields(val interface{}, fields ...string) error {
+func (o *SubObject) onLockedFields(val any, fields ...string) error {
 	if o.hasUpstreamIdentifier(val, fields...) {
 		return ErrAttemptToTouchUpstreamIdentifier{}
 	}
@@ -212,7 +212,7 @@ func (o *SubObject) onLockedFields(val interface{}, fields ...string) error {
 // SetNestedField sets a nested field located by fields to the value provided as val. val
 // should not be a yaml.RNode. If you want to deal with yaml.RNode, you should
 // use Get method and modify the underlying yaml.Node.
-func (o *SubObject) SetNestedField(val interface{}, fields ...string) error {
+func (o *SubObject) SetNestedField(val any, fields ...string) error {
 	if err := o.onLockedFields(val, fields...); err != nil {
 		return err
 	}
@@ -227,7 +227,7 @@ func (o *SubObject) SetNestedField(val interface{}, fields ...string) error {
 			o.obj = internal.NewMap(nil)
 		}
 		kind := reflect.ValueOf(val).Kind()
-		if kind == reflect.Ptr {
+		if kind == reflect.Pointer {
 			kind = reflect.TypeOf(val).Elem().Kind()
 		}
 
@@ -377,12 +377,12 @@ func (o *KubeObject) SetHeadComment(comment string, fields ...string) error {
 
 // As converts a KubeObject to the desired typed object. ptr must be
 // a pointer to a typed object.
-func (o *SubObject) As(ptr interface{}) error {
+func (o *SubObject) As(ptr any) error {
 	err := func() error {
 		if o == nil {
 			return fmt.Errorf("the object doesn't exist")
 		}
-		if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Ptr {
+		if ptr == nil || reflect.ValueOf(ptr).Kind() != reflect.Pointer {
 			return fmt.Errorf("ptr must be a pointer to an object")
 		}
 		return internal.MapVariantToTypedObject(o.obj, ptr)
@@ -394,9 +394,9 @@ func (o *SubObject) As(ptr interface{}) error {
 }
 
 // NewFromTypedObject construct a KubeObject from a typed object (e.g. corev1.Pod)
-func NewFromTypedObject(v interface{}) (*KubeObject, error) {
+func NewFromTypedObject(v any) (*KubeObject, error) {
 	kind := reflect.ValueOf(v).Kind()
-	if kind == reflect.Ptr {
+	if kind == reflect.Pointer {
 		kind = reflect.TypeOf(v).Elem().Kind()
 	}
 	var err error
@@ -755,7 +755,7 @@ func rnodeToKubeObject(rn *yaml.RNode) *KubeObject {
 	return asKubeObject(mapVariant)
 }
 
-func NewKubeObjectFromMap(m map[string]interface{}) (*KubeObject, error) {
+func NewKubeObjectFromMap(m map[string]any) (*KubeObject, error) {
 	rn, err := yaml.FromMap(m)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't convert unstructured/JSON map to KubeObject: %w", err)
@@ -834,7 +834,7 @@ func (o *SubObject) Set(newValue *SubObject) error {
 // `newValue` must be of type struct or map[string]...
 func (o *SubObject) SetFromTypedObject(newValue any) error {
 	kind := reflect.ValueOf(newValue).Kind()
-	if kind == reflect.Ptr {
+	if kind == reflect.Pointer {
 		kind = reflect.TypeOf(newValue).Elem().Kind()
 	}
 	if kind != reflect.Struct && kind != reflect.Map {

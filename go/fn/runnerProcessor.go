@@ -1,4 +1,4 @@
-// Copyright 2022 The kpt Authors
+// Copyright 2022-2026 The kpt Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ func (r *runnerProcessor) config(o *KubeObject) error {
 func asFnName(runner Runner) string {
 	// Validate the fnRunner type to avoid panic.
 	kind := reflect.ValueOf(runner).Kind()
-	if kind != reflect.Interface && kind != reflect.Ptr {
+	if kind != reflect.Interface && kind != reflect.Pointer {
 		return ""
 	}
 	return reflect.ValueOf(runner).Elem().Type().Name()
@@ -104,11 +104,11 @@ func assignCMDataToFn(runner Runner, data map[string]string) error {
 	if obj.Kind() != reflect.Struct {
 		return fmt.Errorf("the ConfigMap is not of a struct, got %v", obj.Kind().String())
 	}
-	stringMap := reflect.MapOf(reflect.TypeOf("string"), reflect.TypeOf("string"))
-	for i := 0; i < obj.NumField(); i++ {
-		if obj.Field(i).Kind() == reflect.Map && obj.Field(i).Type() == stringMap {
-			if obj.Field(i).CanSet() {
-				obj.Field(i).Set(reflect.ValueOf(data))
+	stringMap := reflect.MapOf(reflect.TypeFor[string](), reflect.TypeFor[string]())
+	for _, field := range obj.Fields() {
+		if field.Kind() == reflect.Map && field.Type() == stringMap {
+			if field.CanSet() {
+				field.Set(reflect.ValueOf(data))
 			}
 			return nil
 		}

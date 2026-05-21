@@ -273,7 +273,7 @@ func (o *MapVariant) UpsertMap(field string) *MapVariant {
 	keyNode := &yaml.Node{
 		Kind:  yaml.ScalarNode,
 		Value: field,
-		Tag:   "!!str",
+		Tag:   tagString,
 	}
 	valueNode := &yaml.Node{
 		Kind: yaml.MappingNode,
