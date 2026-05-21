@@ -8,7 +8,7 @@ MODULES = $(shell find . -name 'go.mod' -print)
 
 .PHONY: fix
 fix: $(MODULES)
-	@for f in $(^D); do (cd $$f; echo "Fixing $$f"; go fix ./...) || exit 1; done
+	@for f in $(^D); do (cd $$f; echo "Fixing $$f"; go fix -omitzero=false ./...) || exit 1; done
 
 .PHONY: fmt
 fmt: $(MODULES)
@@ -16,7 +16,7 @@ fmt: $(MODULES)
 
 .PHONY: install-golangci-lint
 install-golangci-lint:
-	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
 .PHONY: lint
 lint: install-golangci-lint lint-modules
