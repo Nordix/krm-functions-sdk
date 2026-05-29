@@ -91,7 +91,7 @@ func setArgs(t *testing.T, args []string) {
 func TestAsMain_HelpFlag_ExitsZero(t *testing.T) {
 	setArgs(t, []string{"cmd", "--help"})
 
-	// Close stdin to prove it's not read — if AsMain tries to read STDIN,
+	// Close stdin to prove it is not read — if AsMain tries to read STDIN,
 	// it would get an error or EOF immediately.
 	origStdin := os.Stdin
 	r, w, err := os.Pipe()
@@ -145,7 +145,7 @@ The set-labels function adds labels to all resources.
   kpt fn eval --image set-labels:v0.1
 <!--mdtogo-->
 `)
-	meta := []byte(`image: gcr.io/kpt-fn/set-labels:v0.1
+	meta := []byte(`image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.1
 description: Set labels on all resources
 `)
 
@@ -173,7 +173,7 @@ Set labels
 Long description here.
 <!--mdtogo-->
 `)
-	meta := []byte(`image: gcr.io/kpt-fn/set-labels:v0.1
+	meta := []byte(`image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.1
 description: Set labels on all resources
 tags:
   - mutator
@@ -193,7 +193,7 @@ license: Apache-2.0
 	// Verify fields are populated
 	assert.Equal(t, "Set labels", docOutput.Short)
 	assert.Equal(t, "Long description here.", docOutput.Long)
-	assert.Equal(t, "gcr.io/kpt-fn/set-labels:v0.1", docOutput.Image)
+	assert.Equal(t, "ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.1", docOutput.Image)
 	assert.Equal(t, "Set labels on all resources", docOutput.Description)
 	assert.Equal(t, []string{"mutator"}, docOutput.Tags)
 	assert.Equal(t, "Apache-2.0", docOutput.License)
@@ -222,7 +222,7 @@ func TestAsMain_DocFlag_HiddenField(t *testing.T) {
 Hidden function
 <!--mdtogo-->
 `)
-	meta := []byte(`image: gcr.io/kpt-fn/hidden-fn:v0.1
+	meta := []byte(`image: ghcr.io/kptdev/krm-functions-catalog/hidden-fn:v0.1
 description: A hidden function
 hidden: true
 `)
@@ -237,7 +237,7 @@ hidden: true
 	require.NoError(t, err, "--doc output should be valid JSON")
 
 	assert.True(t, docOutput.Hidden, "hidden:true should propagate to JSON output")
-	assert.Equal(t, "gcr.io/kpt-fn/hidden-fn:v0.1", docOutput.Image)
+	assert.Equal(t, "ghcr.io/kptdev/krm-functions-catalog/hidden-fn:v0.1", docOutput.Image)
 }
 
 // TestAsMain_DocFlag_InvalidMetadataYAML verifies that invalid metadata YAML
